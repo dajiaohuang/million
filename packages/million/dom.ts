@@ -189,7 +189,13 @@ export const setStyleAttribute = (
   name: string,
   value?: string | boolean | number | null,
 ) => {
-  if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(name)) {
+  if (name.startsWith('--')) {
+    if (value === undefined || value === null) {
+      el.style.removeProperty(name);
+    } else {
+      el.style.setProperty(name, String(value));
+    }
+  } else if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(name)) {
     el.style[name] = value;
   } else if (typeof value === 'string') {
     el.style.cssText = value;

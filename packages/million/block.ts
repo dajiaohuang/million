@@ -297,7 +297,12 @@ export class Block extends AbstractBlock {
         } else if (edit.t & AttributeFlag) {
           setAttribute(el, edit.n!, newValue);
         } else if (edit.t & StyleAttributeFlag) {
-          if (typeof newValue === 'string' || typeof newValue === 'number') {
+          if (
+            newValue === undefined ||
+            newValue === null ||
+            typeof newValue === 'string' ||
+            typeof newValue === 'number'
+          ) {
             setStyleAttribute(el, edit.n!, newValue);
           } else {
             for (const style in newValue) {

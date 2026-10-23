@@ -58,6 +58,26 @@ describe.concurrent('block', () => {
       '<div><h1>Hello</h1> World<p title="baz" style="margin: 1px;" class="bar">bar</p></div>',
     );
   });
+  it('should mount, patch, and remove CSS custom properties', ({ expect }) => {
+    const block = createBlock((props?: MillionProps) => ({
+      type: 'div',
+      props: {
+        style: { '--tone': props?.tone, '--level': props?.level },
+      },
+    }));
+    const main = block({ tone: 'red', level: 1 });
+    main.m();
+    expect(main.l?.style.getPropertyValue('--tone')).toBe('red');
+    expect(main.l?.style.getPropertyValue('--level')).toBe('1');
+
+    main.p(block({ tone: 'blue', level: 2 }));
+    expect(main.l?.style.getPropertyValue('--tone')).toBe('blue');
+    expect(main.l?.style.getPropertyValue('--level')).toBe('2');
+
+    main.p(block({ tone: null }));
+    expect(main.l?.style.getPropertyValue('--tone')).toBe('');
+    expect(main.l?.style.getPropertyValue('--level')).toBe('');
+  });
   it('should patch nested blocks', ({ expect }) => {
     const block = createBlock(fn);
     const subBlock = createBlock(fn);
